@@ -3,11 +3,11 @@
 require(vroom)
 library(tidyverse)
 library(MASS)         # para usar binomiales negativas si se requiere
-library(ggplot2)      # para gr·ficas lindas
-library(infotheo)     # para los c·lculos de informaciÛn mutua
+library(ggplot2)      # para gr√°ficas lindas
+library(infotheo)     # para los c√°lculos de informaci√≥n mutua
 library(igraph)       # para manejar las redes
 library(plot.matrix)  # para visualizar matrices
-library(dplyr)        # Para manejar con m·s facilidad queries
+library(dplyr)        # Para manejar con m√°s facilidad queries
 library(maigesPack)   # Para calcular significancia redes por Boostrap
 
 setwd("Archivos_CSV")
@@ -16,11 +16,11 @@ setwd("Archivos_CSV")
 
 nac_all=read.table(file="/Archivos_CSV/Rwd_all.csv", header = FALSE, sep=",")
 
-# Discretizamos en bines para el c·lculo de informaciÛn mutua
+# Discretizamos en bines para el c√°lculo de informaci√≥n mutua
 
 disc_nac <-  apply(X = nac_all, MARGIN = 1, FUN = infotheo::discretize)
 
-# Calculamos la matrÌz de valores de informaciÛn mutua
+# Calculamos la matr√≠z de valores de informaci√≥n mutua
 mi <- 
   sapply(disc_nac, FUN = function(i){
     sapply(disc_nac, FUN = function(j){
@@ -28,7 +28,7 @@ mi <-
     })
   })
 
-# Analizamos la distribuciÛn de valores de informaciÛn mutua
+# Analizamos la distribuci√≥n de valores de informaci√≥n mutua
 
 #density(mi)
 
@@ -49,11 +49,11 @@ heatmap(mi,Colv = NA, Rowv = NA,col=rainbow(7), main = "Mutual information distr
 # De este histograma notamos muchos valores de MI, relativamente bajos
 
 
-# Esta es la matrÌz completa de valores de infomaciÛn mutua.
+# Esta es la matr√≠z completa de valores de infomaci√≥n mutua.
 # Son 1527 x 1527 = 2,331,729. 
 
-# Quiz· valga la pena convertir la informaciÛn a bits que 
-# es una unidad m·s intuitiva
+# Quiz√° valga la pena convertir la informaci√≥n a bits que 
+# es una unidad m√°s intuitiva
 
 emei= natstobits(mi)
 
@@ -70,20 +70,20 @@ plot(denemei,main="Mutual Information Probability Density Distribution Rwd_all",
 write.csv(emei, row.names=F,file="MI_Full_Rwd_all.csv")
 
 
-# Si vemos el histograma, hay un pico "extraÒo" con MI como de 3 bits
-# Es que en el c·lculo tambiÈn tenemos a cada neurona consigo misma
+# Si vemos el histograma, hay un pico "extra√±o" con MI como de 3 bits
+# Es que en el c√°lculo tambi√©n tenemos a cada neurona consigo misma
 
-# Para construir una matrÌz de adyacencia a partir de esta 
-# matrÌz de informaciÛn mutua es necesario establecer un umbral
-# Exploremos esto. Por ejemplo si nos quedamos con el 0.1% m·s
-# alto de los valores (nos quedar·n 2,332 links).
+# Para construir una matr√≠z de adyacencia a partir de esta 
+# matr√≠z de informaci√≥n mutua es necesario establecer un umbral
+# Exploremos esto. Por ejemplo si nos quedamos con el 0.1% m√°s
+# alto de los valores (nos quedar√°n 2,332 links).
 
 th1m <- quantile(emei,0.999)
 
 th1m
 
 
-# Extraigo una matrÌz de adyacencia con los 2,332 enlaces mayores de MI
+# Extraigo una matr√≠z de adyacencia con los 2,332 enlaces mayores de MI
 
 netmi <- ifelse(emei < quantile(emei, 0.999), 0, 1)
 
@@ -112,7 +112,7 @@ density(netmi)
 heatmap(netmi,Colv = NA, Rowv = NA,col=c("white","black"), main = "Adjacency matrix")
 
 
-# Como vemos la mayorÌa de las entradas de la matrÌz de adyacencia son cero 
+# Como vemos la mayor√≠a de las entradas de la matr√≠z de adyacencia son cero 
 # (de hecho, el 99.9 % de ellos).
 
 denmitt <-density(netmi)
@@ -131,8 +131,8 @@ vcount(g)
 
 write_graph(g, "Rwd_all_network_top_999.txt", "edgelist")
 
-## C·lculo de significancia estadistica por bootstrap
-## Es un c·lculo muy largo que vale la pena correr en un cluster
+## C√°lculo de significancia estadistica por bootstrap
+## Es un c√°lculo muy largo que vale la pena correr en un cluster
 
 # bootstrapMI(nac_all, y=NULL, bRep=100, ret="p-value")
 
@@ -140,9 +140,9 @@ write_graph(g, "Rwd_all_network_top_999.txt", "edgelist")
 
 emeix=read.csv(file="MI_Full_Rwd_All.csv", header = TRUE)
 
-##  emeix (em) y emei son exactamente la misma matrÌz, esto lo hice
-## para trabajar en los umbrales varios dÌas sin mantener en la memoria
-## RAM de mi laptop una matrÌz tan grande
+##  emeix (em) y emei son exactamente la misma matr√≠z, esto lo hice
+## para trabajar en los umbrales varios d√≠as sin mantener en la memoria
+## RAM de mi laptop una matr√≠z tan grande
 
 em=as.matrix.data.frame(emeix)
 
@@ -208,7 +208,7 @@ vcount(gv)
 
 write_graph(gv, "Rwd_all_network_top_75.txt", "edgelist")
 
-# Valores de corte de informaciÛn mutua para los diferentes cuantiles (bits)
+# Valores de corte de informaci√≥n mutua para los diferentes cuantiles (bits)
 
 quantile(emei,0.99)
 
